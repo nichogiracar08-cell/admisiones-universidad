@@ -28,4 +28,4 @@ facultadSchema.virtual('programas', {
   foreignField: 'facultad',
 });
 
-module.exports = model('Facultad', facultadSchema);
+module.exports = model('Facultad', facultadSchema, 'facultades');
