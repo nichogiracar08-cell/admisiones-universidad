@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión · Admisiones</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <div class="login-logo">🎓</div>
+    <h1>Admisiones Universidad</h1>
+    <p class="sub" id="subtitulo">Inicia sesión para continuar</p>
+
+    <!-- LOGIN -->
+    <form id="formLogin">
+      <label>Correo electrónico <input name="email" type="email" required autocomplete="username" /></label>
+      <label>Contraseña <input name="password" type="password" required autocomplete="current-password" /></label>
+      <button type="submit" class="primario">Ingresar</button>
+      <p class="cambio">¿No tienes cuenta? <a href="#" id="irRegistro">Regístrate</a></p>
+    </form>
+
+    <!-- REGISTRO -->
+    <form id="formRegistro" hidden>
+      <label>Nombre completo <input name="nombre" required /></label>
+      <label>Correo electrónico <input name="email" type="email" required autocomplete="username" /></label>
+      <label>Contraseña <input name="password" type="password" minlength="6" required autocomplete="new-password" /></label>
+      <button type="submit" class="primario">Crear cuenta</button>
+      <p class="cambio">¿Ya tienes cuenta? <a href="#" id="irLogin">Inicia sesión</a></p>
+    </form>
+
+    <p id="error" class="error" role="alert"></p>
+  </div>
+
+  <script>
+    // Si ya hay sesión, ir directo al panel
+    if (localStorage.getItem('token')) location.replace('/');
+
+    const formLogin = document.getElementById('formLogin');
+    const formRegistro = document.getElementById('formRegistro');
+    const error = document.getElementById('error');
+
+    const mostrar = (registro) => {
+      formLogin.hidden = registro;
+      formRegistro.hidden = !registro;
+      document.getElementById('subtitulo').textContent = registro ? 'Crea tu cuenta de asesor' : 'Inicia sesión para continuar';
+      error.textContent = '';
+    };
+    document.getElementById('irRegistro').onclick = (e) => { e.preventDefault(); mostrar(true); };
+    document.getElementById('irLogin').onclick = (e) => { e.preventDefault(); mostrar(false); };
+
+    async function enviar(ruta, form) {
+      error.textContent = '';
+      const boton = form.querySelector('button');
+      boton.disabled = true;
+      try {
+        const res = await fetch('/api/auth/' + ruta, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.mensaje);
+        localStorage.setItem('token', json.token);
+        localStorage.setItem('usuario', JSON.stringify(json.usuario));
+        location.replace('/');
+      } catch (e) {
+        error.textContent = e.message || 'No se pudo conectar con el servidor';
+      } finally {
+        boton.disabled = false;
+      }
+    }
+
+    formLogin.onsubmit = (e) => { e.preventDefault(); enviar('login', formLogin); };
+    formRegistro.onsubmit = (e) => { e.preventDefault(); enviar('registro', formRegistro); };
+  </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admisiones Universidad</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="marca">🎓 <strong>Universidad</strong> · Admisiones</div>
+    <nav>
+      <button class="tab activo" data-tab="inscripcion">Inscripción</button>
+      <button class="tab" data-tab="estudiantes">Estudiantes</button>
+      <button class="tab" data-tab="programas">Programas</button>
+      <button class="tab" data-tab="facultades">Facultades</button>
+    </nav>
+    <div class="usuario">
+      <span>👤 <b id="nombreUsuario"></b></span>
+      <span class="rol" id="rolUsuario"></span>
+      <button id="btnLogout">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="stats" class="stats"></section>
+
+    <!-- INSCRIPCIÓN -->
+    <section id="inscripcion" class="panel activo">
+      <h2>Formulario de inscripción</h2>
+      <form id="formEstudiante" class="grid">
+        <label>Tipo documento
+          <select name="tipoDocumento"><option>CC</option><option>TI</option><option>CE</option><option>Pasaporte</option></select>
+        </label>
+        <label>Documento <input name="documento" required /></label>
+        <label>Nombres <input name="nombres" required /></label>
+        <label>Apellidos <input name="apellidos" required /></label>
+        <label>Email <input name="email" type="email" required /></label>
+        <label>Teléfono <input name="telefono" /></label>
+        <label>Fecha de nacimiento <input name="fechaNacimiento" type="date" /></label>
+        <label>Colegio <input name="colegio" /></label>
+        <label>Puntaje ICFES <input name="puntajeIcfes" type="number" min="0" max="500" /></label>
+        <label>Facultad
+          <select id="selFacultadInscripcion"></select>
+        </label>
+        <label class="ancho">Programa
+          <select name="programa" id="selProgramaInscripcion" required></select>
+        </label>
+        <button type="submit" class="primario ancho">Enviar inscripción</button>
+      </form>
+    </section>
+
+    <!-- ESTUDIANTES -->
+    <section id="estudiantes" class="panel">
+      <h2>Estudiantes inscritos</h2>
+      <div class="filtros">
+        <input id="buscar" placeholder="Buscar por nombre, documento o email…" />
+        <select id="filtroEstado">
+          <option value="">Todos los estados</option>
+          <option>Inscrito</option><option>En revisión</option><option>Admitido</option><option>Rechazado</option>
+        </select>
+      </div>
+      <div class="tabla-wrap"><table id="tablaEstudiantes"></table></div>
+    </section>
+
+    <!-- PROGRAMAS -->
+    <section id="programas" class="panel">
+      <h2>Programas académicos</h2>
+      <form id="formPrograma" class="grid solo-admin">
+        <label>Nombre <input name="nombre" required /></label>
+        <label>Código <input name="codigo" required /></label>
+        <label>Facultad <select name="facultad" id="selFacultadPrograma" required></select></label>
+        <label>Nivel
+          <select name="nivel"><option>Pregrado</option><option>Especialización</option><option>Maestría</option><option>Doctorado</option></select>
+        </label>
+        <label>Modalidad
+          <select name="modalidad"><option>Presencial</option><option>Virtual</option><option>Híbrida</option></select>
+        </label>
+        <label>Semestres <input name="duracionSemestres" type="number" min="1" value="10" /></label>
+        <label>Cupos <input name="cupos" type="number" min="0" value="40" /></label>
+        <label>Valor semestre <input name="valorSemestre" type="number" min="0" value="0" /></label>
+        <button type="submit" class="primario ancho">Crear programa</button>
+      </form>
+      <div class="tabla-wrap"><table id="tablaProgramas"></table></div>
+    </section>
+
+    <!-- FACULTADES -->
+    <section id="facultades" class="panel">
+      <h2>Facultades</h2>
+      <form id="formFacultad" class="grid solo-admin">
+        <label>Nombre <input name="nombre" required /></label>
+        <label>Código <input name="codigo" required /></label>
+        <label>Decano <input name="decano" /></label>
+        <label>Descripción <input name="descripcion" /></label>
+        <button type="submit" class="primario ancho">Crear facultad</button>
+      </form>
+      <div class="tabla-wrap"><table id="tablaFacultades"></table></div>
+    </section>
+  </main>
+
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+### Pruebas de la API (extensión "REST Client" de VS Code: clic en "Send Request")
+@url = http://localhost:3000/api
+
+### ===== LOGIN (ejecuta este primero, guarda el token) =====
+# @name login
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{ "email": "admin@universidad.edu", "password": "Admin123*" }
+
+###
+@token = {{login.response.body.token}}
+
+### Registro de usuario nuevo
+POST {{url}}/auth/registro
+Content-Type: application/json
+
+{ "nombre": "Nuevo Asesor", "email": "nuevo@universidad.edu", "password": "123456" }
+
+### Perfil del usuario logueado
+GET {{url}}/auth/perfil
+Authorization: Bearer {{token}}
+
+### Historial de sesiones
+GET {{url}}/auth/sesiones
+Authorization: Bearer {{token}}
+
+### Cerrar sesión (invalida el token)
+POST {{url}}/auth/logout
+Authorization: Bearer {{token}}
+
+### Info
+GET {{url}}
+
+### ===== FACULTADES =====
+GET {{url}}/facultades
+Authorization: Bearer {{token}}
+
+###
+POST {{url}}/facultades
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Facultad de Derecho",
+  "codigo": "DER",
+  "decano": "Dr. Felipe Castro",
+  "descripcion": "Ciencias jurídicas y políticas"
+}
+
+###
+GET {{url}}/facultades/PEGAR_ID_AQUI
+Authorization: Bearer {{token}}
+
+###
+PUT {{url}}/facultades/PEGAR_ID_AQUI
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "decano": "Dra. Ana Torres" }
+
+###
+DELETE {{url}}/facultades/PEGAR_ID_AQUI
+Authorization: Bearer {{token}}
+
+### ===== PROGRAMAS =====
+GET {{url}}/programas
+Authorization: Bearer {{token}}
+
+### Filtrar por nivel / facultad
+GET {{url}}/programas?nivel=Pregrado
+Authorization: Bearer {{token}}
+
+###
+POST {{url}}/programas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Derecho",
+  "codigo": "DER-DER",
+  "facultad": "PEGAR_ID_FACULTAD",
+  "nivel": "Pregrado",
+  "modalidad": "Presencial",
+  "duracionSemestres": 10,
+  "cupos": 50,
+  "valorSemestre": 6000000
+}
+
+###
+GET {{url}}/programas/PEGAR_ID_AQUI
+Authorization: Bearer {{token}}
+
+###
+DELETE {{url}}/programas/PEGAR_ID_AQUI
+Authorization: Bearer {{token}}
+
+### ===== ESTUDIANTES =====
+GET {{url}}/estudiantes
+Authorization: Bearer {{token}}
+
+### Buscar / filtrar
+GET {{url}}/estudiantes?buscar=valentina&estado=Admitido
+Authorization: Bearer {{token}}
+
+### Inscribir estudiante
+POST {{url}}/estudiantes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipoDocumento": "CC",
+  "documento": "1012345678",
+  "nombres": "Juan",
+  "apellidos": "Pérez",
+  "email": "juan.perez@correo.com",
+  "telefono": "3105556677",
+  "fechaNacimiento": "2007-04-15",
+  "colegio": "Colegio Nacional",
+  "puntajeIcfes": 350,
+  "programa": "PEGAR_ID_PROGRAMA"
+}
+
+### Cambiar estado de admisión
+PATCH {{url}}/estudiantes/PEGAR_ID_AQUI/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "estadoAdmision": "Admitido" }
+
+###
+PUT {{url}}/estudiantes/PEGAR_ID_AQUI
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "telefono": "3000000000" }
+
+###
+DELETE {{url}}/estudiantes/PEGAR_ID_AQUI
+Authorization: Bearer {{token}}
+
+### ===== ESTADÍSTICAS =====
+GET {{url}}/estadisticas
+Authorization: Bearer {{token}}
